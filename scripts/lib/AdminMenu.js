@@ -4,13 +4,13 @@ import Database from "../Extensions/Database";
 
 export default function AdminMenu(player) {
     // Retrieve ChatRanksConfig from the database or set default values
-    const data = Database.get('ChatRanksConfig') ?? { 
-        itemId: 'minecraft:stick', 
-        rankformat: { 
+    const data = Database.get('ChatRanksConfig') ?? {
+        itemId: 'minecraft:stick',
+        rankformat: {
             prefix: 'rank:',
             ranklook: '§c[{rank}§c]§r', // Default rank look
             format: '{name}: {message}',
-        }, 
+        },
         defaultRank: 'Member',
         EnableChatRanks: false
     };
@@ -18,15 +18,33 @@ export default function AdminMenu(player) {
     // Create and show the admin modal form
     new ModalFormData()
         .title('§6Admin Menu')
-        .textField('§eItem ID for admin menu', 'Item ID', data.itemId)
-        .textField('§ePlayer rank prefix', 'Rank Prefix', data.rankformat.prefix)
-        .textField('§eDefault rank for players', 'Default Rank', data.defaultRank)
-        .textField('§eRank look for chat', 'Rank Look', data.rankformat.ranklook) 
-        .textField('§eRank format for chat. Include {rank}, {name}, {message}.', 'Rank Format', data.rankformat.format)
-        .toggle('§eEnable Chat Ranks', data.EnableChatRanks)     
+        
+        .textField('§eItem ID for admin menu', 'Item ID', {
+            defaultValue: data.itemId
+        })
+        
+        .textField('§ePlayer rank prefix', 'Rank Prefix', {
+            defaultValue: data.rankformat.prefix
+        })
+        
+        .textField('§eDefault rank for players', 'Default Rank', {
+            defaultValue: data.defaultRank
+        })
+        
+        .textField('§eRank look for chat', 'Rank Look', {
+            defaultValue: data.rankformat.ranklook
+        })
+        
+        .textField('§eRank format for chat. Include {rank}, {name}, {message}.', 'Rank Format', {
+            defaultValue: data.rankformat.format
+        })
+
+        .toggle('§eEnable Chat Ranks', {
+            defaultValue: data.EnableChatRanks
+        })
         .show(player).then((result) => {
             if (result.canceled) return;
-        
+
             const [ItemID, RankPrefix, DefaultRank, RankLook, RankFormat, EnableChatRanks] = result.formValues;
 
             // Validate the inputs
@@ -49,9 +67,9 @@ export default function AdminMenu(player) {
                     if (confirmation.selection === 1) return AdminMenu(player); // Reopen Admin Menu if "Back" is selected
 
                     // Update database with new configuration
-                    Database.set('ChatRanksConfig', { 
+                    Database.set('ChatRanksConfig', {
                         itemId: ItemID,// Store the item ID 
-                        rankformat: {  
+                        rankformat: {
                             prefix: RankPrefix, // Store the rank prefix
                             ranklook: RankLook, // Store the rank look
                             format: RankFormat // Store the rank format

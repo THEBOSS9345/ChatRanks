@@ -2,7 +2,6 @@ import { world, Player } from "@minecraft/server";
 import Database from "../Extensions/Database";
 
 world.beforeEvents.chatSend.subscribe((data) => {
-     // Retrieve ChatRanksConfig from the database or set default values
     const rankData = Database.get('ChatRanksConfig') ?? {
         itemId: 'minecraft:stick',
         rankformat: { 
